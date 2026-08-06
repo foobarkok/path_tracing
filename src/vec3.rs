@@ -33,7 +33,7 @@ impl Vec3 {
         *self / self.length()
     }
     #[allow(dead_code)]
-    pub fn dot(self, b: Self) -> f64 {
+    pub fn dot(&self, b: Self) -> f64 {
         self.x * b.x + self.y * b.y + self.z * b.z
     }
     #[allow(dead_code)]
