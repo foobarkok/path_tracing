@@ -8,7 +8,8 @@ use ray::Ray;
 use vec3::Vec3;
 
 fn ray_color(r: &Ray) -> Vec3 {
-    Vec3::zero()
+    let a = (r.direction().unit().y + 1.0) * 0.5;
+    Vec3::new(1.0, 1.0, 1.0) * (1.0 - a) + Vec3::new(0.5, 0.7, 1.0) * a
 }
 
 fn main() {
@@ -26,7 +27,7 @@ fn main() {
 
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
     let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
-    let viewport_v = Vec3::new(0.0, viewport_height, 0.0);
+    let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     let pixel_delta_u = viewport_u / image_width as f64;
