@@ -23,10 +23,8 @@ fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> Option<f64> {
 fn ray_color(r: &Ray) -> Vec3 {
     let center = Vec3::new(0.0, 0.0, -1.0);
     if let Some(t) = hit_sphere(center, 0.5, r) {
-        if t >= 0.0 {
-            let n = (r.at(t) - center).unit();
-            return (n + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
-        }
+        let n = (r.at(t) - center).unit();
+        return (n + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
     }
 
     let a = (r.direction().unit().y + 1.0) * 0.5;
