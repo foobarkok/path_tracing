@@ -10,7 +10,7 @@ use vec3::Vec3;
 fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> bool {
     let oc = center - r.origin();
     let a = r.direction().length_squared();
-    let b = -2.0 * Vec3::dot(&r.direction(), &oc);
+    let b = -2.0 * r.direction().dot(oc);
     let c = oc.length_squared() - radius * radius;
     b * b >= 4.0 * a * c
 }

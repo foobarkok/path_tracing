@@ -33,11 +33,11 @@ impl Vec3 {
         *self / self.length()
     }
     #[allow(dead_code)]
-    pub fn dot(a: &Self, b: &Self) -> f64 {
-        a.x * b.x + a.y * b.y + a.z * b.z
+    pub fn dot(self, b: Self) -> f64 {
+        self.x * b.x + self.y * b.y + self.z * b.z
     }
     #[allow(dead_code)]
-    pub fn cross(&self, b: &Self) -> Self {
+    pub fn cross(&self, b: Self) -> Self {
         Self {
             x: self.y * b.z - self.z * b.y,
             y: self.z * b.x - self.x * b.z,
