@@ -7,17 +7,24 @@ use color::write_color;
 use ray::Ray;
 use vec3::Vec3;
 
-fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> bool {
+fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> Option<f64> {
     let oc = center - r.origin();
     let a = r.direction().length_squared();
     let b = -2.0 * r.direction().dot(oc);
     let c = oc.length_squared() - radius * radius;
-    b * b >= 4.0 * a * c
+    let discriminant = b * b - 4.0 * a * c;
+    if discriminant <= 0.0 {
+        None
+    } else {
+        Some((-b - discriminant.sqrt()) / (2.0 * a))
+    }
 }
 
 fn ray_color(r: &Ray) -> Vec3 {
-    if hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5, r) {
-        return Vec3::new(1.0, 0.0, 0.0);
+    let center = Vec3::new(0.0, 0.0, -1.0);
+    if let Some(t) = hit_sphere(center, 0.5, r) {
+        let n = (r.at(t) - center).unit();
+        return (n + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
     }
 
     let a = (r.direction().unit().y + 1.0) * 0.5;
