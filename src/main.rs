@@ -23,8 +23,10 @@ fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> Option<f64> {
 fn ray_color(r: &Ray) -> Vec3 {
     let center = Vec3::new(0.0, 0.0, -1.0);
     if let Some(t) = hit_sphere(center, 0.5, r) {
-        let n = (r.at(t) - center).unit();
-        return (n + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
+        if t >= 0.0 {
+            let n = (r.at(t) - center).unit();
+            return (n + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
+        }
     }
 
     let a = (r.direction().unit().y + 1.0) * 0.5;
@@ -54,7 +56,7 @@ fn main() {
 
     // Calculate the location of the upper left pixel.
     let viewport_upper_left =
-        camera_center - Vec3::new(0.0, 0.0, -focal_length) - viewport_u * 0.5 - viewport_v * 0.5;
+        camera_center - Vec3::new(0.0, 0.0, focal_length) - viewport_u * 0.5 - viewport_v * 0.5;
     let pixel00_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5;
 
     println!("P3");
