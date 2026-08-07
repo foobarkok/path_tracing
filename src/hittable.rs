@@ -1,5 +1,5 @@
+use crate::ray::Ray;
 use crate::vec3::Vec3;
-use ray::Ray;
 
 struct hit_record {
     pub p: Vec3,
@@ -8,5 +8,5 @@ struct hit_record {
 }
 
 pub trait hittable {
-    fn hit(&self, r: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &hit_record) -> bool;
+    fn hit(&self, r: &Ray, ray_tmin: f64, ray_tmax: f64) -> Option<hit_record>;
 }
