@@ -10,13 +10,13 @@ use vec3::Vec3;
 fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> Option<f64> {
     let oc = center - r.origin();
     let a = r.direction().length_squared();
-    let b = -2.0 * r.direction().dot(oc);
+    let h = r.direction().dot(oc);
     let c = oc.length_squared() - radius * radius;
-    let discriminant = b * b - 4.0 * a * c;
+    let discriminant = h * h - a * c;
     if discriminant < 0.0 {
         None
     } else {
-        Some((-b - discriminant.sqrt()) / (2.0 * a))
+        Some((h - discriminant.sqrt()) / a)
     }
 }
 
