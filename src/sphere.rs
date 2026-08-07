@@ -1,4 +1,5 @@
 use crate::hittable::{hit_record, hittable};
+use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 struct sphere {
@@ -11,12 +12,12 @@ impl sphere {
         Self { center, radius }
     }
 }
-impl sphere for hittable {
+impl hittable for sphere {
     fn hit(&self, r: &Ray, ray_tmin: f64, ray_tmax: f64) -> Option<hit_record> {
-        let oc = center - r.origin();
+        let oc = self.center - r.origin();
         let a = r.direction().length_squared();
         let h = r.direction().dot(oc);
-        let c = oc.length_squared() - radius * radius;
+        let c = oc.length_squared() - self.radius * self.radius;
         let discriminant = h * h - a * c;
         if discriminant < 0.0 {
             return None;
@@ -31,11 +32,11 @@ impl sphere for hittable {
             }
         }
 
-        let p = r.at(t);
+        let p = r.at(a);
         let rec = hit_record {
             p,
             t: root,
-            normal: (p - center) / radius,
+            normal: (p - self.center) / self.radius,
         };
 
         Some(rec)
