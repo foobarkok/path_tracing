@@ -10,11 +10,7 @@ pub struct Vec3 {
 impl Vec3 {
     #[allow(dead_code)]
     pub fn zero() -> Self {
-        Self {
-            x: 0.0,
-            y: 0.0,
-            z: 0.0,
-        }
+        Self::new(0.0, 0.0, 0.0)
     }
     #[allow(dead_code)]
     pub fn new(x: f64, y: f64, z: f64) -> Self {
@@ -38,74 +34,54 @@ impl Vec3 {
     }
     #[allow(dead_code)]
     pub fn cross(&self, b: Self) -> Self {
-        Self {
-            x: self.y * b.z - self.z * b.y,
-            y: self.z * b.x - self.x * b.z,
-            z: self.x * b.y - self.y * b.x,
-        }
+        Self::new(
+            self.y * b.z - self.z * b.y,
+            self.z * b.x - self.x * b.z,
+            self.x * b.y - self.y * b.x,
+        )
     }
 }
 
 impl Neg for Vec3 {
     type Output = Vec3;
     fn neg(self) -> Self::Output {
-        Self {
-            x: -self.x,
-            y: -self.y,
-            z: -self.z,
-        }
+        Self::new(-self.x, -self.y, -self.z)
     }
 }
 impl Add for Vec3 {
     type Output = Vec3;
     fn add(self, b: Self) -> Self::Output {
-        Self {
-            x: self.x + b.x,
-            y: self.y + b.y,
-            z: self.z + b.z,
-        }
+        Self::new(self.x + b.x, self.y + b.y, self.z + b.z)
     }
 }
 impl Sub for Vec3 {
     type Output = Vec3;
     fn sub(self, b: Self) -> Self::Output {
-        self + (-b)
+        Self::new(self.x - b.x, self.y - b.y, self.z - b.z)
     }
 }
 impl Mul for Vec3 {
     type Output = Vec3;
     fn mul(self, b: Self) -> Self::Output {
-        Self {
-            x: self.x * b.x,
-            y: self.y * b.y,
-            z: self.z * b.z,
-        }
+        Self::new(self.x * b.x, self.y * b.y, self.z * b.z)
     }
 }
 impl Mul<f64> for Vec3 {
     type Output = Vec3;
     fn mul(self, b: f64) -> Self::Output {
-        Self {
-            x: self.x * b,
-            y: self.y * b,
-            z: self.z * b,
-        }
+        Self::new(self.x * b, self.y * b, self.z * b)
     }
 }
 impl Div for Vec3 {
     type Output = Vec3;
     fn div(self, b: Self) -> Self::Output {
-        Self {
-            x: self.x / b.x,
-            y: self.y / b.y,
-            z: self.z / b.z,
-        }
+        Self::new(self.x / b.x, self.y / b.y, self.z / b.z)
     }
 }
 impl Div<f64> for Vec3 {
     type Output = Vec3;
     fn div(self, b: f64) -> Self::Output {
-        self * (1.0 / b)
+        Self::new(self.x / b, self.y / b, self.z / b)
     }
 }
 impl AddAssign for Vec3 {
