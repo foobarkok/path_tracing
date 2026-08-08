@@ -32,12 +32,9 @@ impl hittable for sphere {
             }
         }
 
-        let mut rec = hit_record::zero();
-        rec.t = root;
-        rec.p = r.at(rec.t);
-        let outward_normal = (rec.p - self.center) / self.radius;
-        rec.set_face_normal(r, outward_normal);
-
-        Some(rec)
+        let t = root;
+        let p = r.at(t);
+        let outward_normal = (p - self.center) / self.radius;
+        Some(hit_record::new_from_outward_normal(p, t, r, outward_normal))
     }
 }

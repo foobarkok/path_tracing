@@ -8,21 +8,19 @@ pub struct hit_record {
     pub front_face: bool,
 }
 impl hit_record {
-    pub fn zero() -> Self {
-        Self {
-            p: Vec3::zero(),
-            normal: Vec3::zero(),
-            t: 0.0,
-            front_face: true,
-        }
-    }
-    pub fn set_face_normal(&mut self, r: &Ray, outward_normal: Vec3) {
-        self.front_face = r.direction().dot(outward_normal) < 0.0;
-        self.normal = if self.front_face {
+    pub fn new_from_outward_normal(p: Vec3, t: f64, r: &ray, outward_normal: Vec3) -> Self {
+        let front_face = r.direction().dot(outward_normal) < 0.0;
+        let normal = if front_face {
             outward_normal
         } else {
             -outward_normal
         };
+        Self {
+            p,
+            normal,
+            t,
+            front_face,
+        }
     }
 }
 
