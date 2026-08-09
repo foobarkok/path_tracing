@@ -2,6 +2,7 @@ mod camera;
 mod color;
 mod hittable;
 mod interval;
+mod material;
 mod ray;
 mod sphere;
 mod vec3;
