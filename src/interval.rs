@@ -1,27 +1,27 @@
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Interval {
-    lower: f64,
-    upper: f64,
+    min: f64,
+    max: f64,
 }
 
 impl Interval {
     const EMPTY: Self = Self::new(f64::INFINITY, f64::NEG_INFINITY);
     const UNIVERSE: Self = Self::new(f64::NEG_INFINITY, f64::INFINITY);
 
-    pub const fn new(lower: f64, upper: f64) -> Self {
-        Self { lower, upper }
+    pub const fn new(min: f64, max: f64) -> Self {
+        Self { min, max }
     }
 
     pub fn size(&self) -> f64 {
-        self.upper - self.lower
+        self.max - self.min
     }
     pub fn contains(&self, x: f64) -> bool {
-        self.lower <= x && x <= self.upper
+        self.min <= x && x <= self.max
     }
     pub fn surrounds(&self, x: f64) -> bool {
-        self.lower < x && x < self.upper
+        self.min < x && x < self.max
     }
     pub fn clamp(&self, x: f64) -> f64 {
-        x.clamp(self.lower, self.upper)
+        x.clamp(self.min, self.max)
     }
 }
