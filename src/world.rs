@@ -22,6 +22,16 @@ impl World {
 }
 impl Hittable for World {
     fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
-        self.objects.iter().find_map(|obj| obj.hit(r, ray_t))
+        let mut result: Option<HitRecord> = None;
+        let mut closest = ray_t.max;
+
+        for obj in &self.objects {
+            if let Some(rec) = obj.hit(r, Interval::new(ray_t.min, closest)) {
+                closest = rec.t;
+                result = Some(rec);
+            }
+        }
+
+        result
     }
 }

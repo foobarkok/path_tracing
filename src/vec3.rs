@@ -41,7 +41,7 @@ impl Vec3 {
             self.x * b.y - self.y * b.x,
         )
     }
-    /*#[allow(dead_code)]
+    #[allow(dead_code)]
     pub fn random(min: f64, max: f64) -> Self {
         Self::new(
             min + (max - min) * rand::random::<f64>(),
@@ -58,18 +58,15 @@ impl Vec3 {
                 return p / lensq.sqrt();
             }
         }
-    }*/
+    }
     #[allow(dead_code)]
-    pub fn random_on_hemisphere() -> Self {
+    pub fn random_on_hemisphere(normal: Vec3) -> Self {
         loop {
-            let p = Self::new(
-                rand::random::<f64>() * 2.0 - 1.0,
-                rand::random::<f64>() * 2.0 - 1.0,
-                rand::random::<f64>(),
-            );
-            let lensq = p.length_squared();
-            if 1e-160 < lensq && lensq <= 1.0 {
-                return p / lensq.sqrt();
+            let p = Self::random_unit_vector();
+            if normal.dot(p) >= 0.0 {
+                return p;
+            } else {
+                return -p;
             }
         }
     }

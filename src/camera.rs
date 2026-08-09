@@ -6,6 +6,7 @@ pub struct Camera {
     image_height: u32,
 
     samples_per_pixel: u32,
+    max_depth: u32,
 
     center: Vec3,        // Camera center
     pixel00_loc: Vec3,   // Location of pixel 0, 0
@@ -41,6 +42,7 @@ impl Camera {
             image_width,
             image_height,
             samples_per_pixel: 10,
+            max_depth: 10,
             center,
             pixel00_loc,
             pixel_delta_u,
@@ -67,14 +69,14 @@ impl Camera {
                         + self.pixel_delta_v * j as f64;
                     let ray_direction = pixel_center - self.center;
                     let r = Ray::new(self.center, ray_direction);
-                    let pixel_color = self.ray_color(&r, world);
+                    let pixel_color = self.ray_color(&r, self.max_depth, world);
 
                     write_color(pixel_color);
                 } else {
                     let pixel_color = (0..self.samples_per_pixel)
                         .map(|_| {
                             let r = self.get_ray(i, j);
-                            self.ray_color(&r, world)
+                            self.ray_color(&r, self.max_depth, world)
                         })
                         .sum::<Vec3>()
                         / self.samples_per_pixel as f64;
@@ -87,9 +89,14 @@ impl Camera {
         eprintln!("Done.");
     }
 
-    fn ray_color<T: Hittable>(&self, r: &Ray, world: &T) -> Vec3 {
-        if let Some(rec) = world.hit(r, Interval::new(0.0, f64::INFINITY)) {
-            return (rec.normal + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
+    fn ray_color<T: Hittable>(&self, r: &Ray, depth: u32, world: &T) -> Vec3 {
+        if depth <= 0 {
+            return Vec3::zero();
+        }
+
+        if let Some(rec) = world.hit(r, Interval::new(0.001, f64::INFINITY)) {
+            let dir = Vec3::random_on_hemisphere(rec.normal);
+            return self.ray_color(&Ray::new(rec.p, dir), depth - 1, world) * 0.5;
         }
 
         let a = (r.direction().unit().y + 1.0) * 0.5;
