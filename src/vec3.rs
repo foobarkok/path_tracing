@@ -9,15 +9,15 @@ pub struct Vec3 {
 
 impl Vec3 {
     #[allow(dead_code)]
-    pub fn zero() -> Self {
+    pub const fn zero() -> Self {
         Self::new(0.0, 0.0, 0.0)
     }
     #[allow(dead_code)]
-    pub fn new(x: f64, y: f64, z: f64) -> Self {
+    pub const fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
     }
     #[allow(dead_code)]
-    pub fn length_squared(&self) -> f64 {
+    pub const fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
     #[allow(dead_code)]
@@ -29,11 +29,11 @@ impl Vec3 {
         *self / self.length()
     }
     #[allow(dead_code)]
-    pub fn dot(&self, b: Self) -> f64 {
+    pub const fn dot(&self, b: Self) -> f64 {
         self.x * b.x + self.y * b.y + self.z * b.z
     }
     #[allow(dead_code)]
-    pub fn cross(&self, b: Self) -> Self {
+    pub const fn cross(&self, b: Self) -> Self {
         Self::new(
             self.y * b.z - self.z * b.y,
             self.z * b.x - self.x * b.z,
