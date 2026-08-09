@@ -41,8 +41,8 @@ impl Camera {
         Self {
             image_width,
             image_height,
-            samples_per_pixel: 10,
-            max_depth: 10,
+            samples_per_pixel: 100,
+            max_depth: 50,
             center,
             pixel00_loc,
             pixel_delta_u,
