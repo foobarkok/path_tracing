@@ -1,4 +1,5 @@
 use crate::hittable::{HitRecord, Hittable};
+use crate::interval::Interval;
 use crate::ray::Ray;
 
 pub struct World {
@@ -20,9 +21,7 @@ impl World {
     }
 }
 impl Hittable for World {
-    fn hit(&self, r: &Ray, ray_tmin: f64, ray_tmax: f64) -> Option<HitRecord> {
-        self.objects
-            .iter()
-            .find_map(|obj| obj.hit(r, ray_tmin, ray_tmax))
+    fn hit(&self, r: &Ray, ray_t: Interval) -> Option<HitRecord> {
+        self.objects.iter().find_map(|obj| obj.hit(r, ray_t))
     }
 }

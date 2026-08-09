@@ -13,8 +13,10 @@ use ray::Ray;
 use vec3::Vec3;
 use world::World;
 
+use crate::interval::Interval;
+
 fn ray_color<T: Hittable>(r: &Ray, world: &T) -> Vec3 {
-    if let Some(rec) = world.hit(r, 0.0, 1000.0) {
+    if let Some(rec) = world.hit(r, Interval::new(0.0, f64::INFINITY)) {
         return (rec.normal + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
     }
 

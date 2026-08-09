@@ -1,3 +1,4 @@
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Interval {
     lower: f64,
     upper: f64,
@@ -18,6 +19,6 @@ impl Interval {
         self.lower <= x && x <= self.upper
     }
     pub fn surrounds(&self, x: f64) -> bool {
-        x < self.lower || x <= self.upper
+        self.lower < x && x < self.upper
     }
 }
