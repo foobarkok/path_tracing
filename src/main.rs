@@ -2,6 +2,7 @@ use std::io::{self, Write};
 
 mod color;
 mod hittable;
+mod interval;
 mod ray;
 mod sphere;
 mod vec3;
