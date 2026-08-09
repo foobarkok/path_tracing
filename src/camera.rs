@@ -3,8 +3,10 @@ use std::io::{self, Write};
 
 pub struct Camera {
     image_width: u32,
+    image_height: u32,
 
-    image_height: u32,   // Rendered image height
+    samples_per_pixel: u32,
+
     center: Vec3,        // Camera center
     pixel00_loc: Vec3,   // Location of pixel 0, 0
     pixel_delta_u: Vec3, // Offset to pixel to the right
@@ -38,6 +40,7 @@ impl Camera {
         Self {
             image_width,
             image_height,
+            samples_per_pixel: 10,
             center,
             pixel00_loc,
             pixel_delta_u,
@@ -58,14 +61,26 @@ impl Camera {
             eprint!("\r\x1B[2KScanlines remaining:{}", image_height - j);
             io::stderr().flush().unwrap();
             for i in 0..image_width {
-                let pixel_center = self.pixel00_loc
-                    + self.pixel_delta_u * i as f64
-                    + self.pixel_delta_v * j as f64;
-                let ray_direction = pixel_center - self.center;
-                let r = Ray::new(self.center, ray_direction);
-                let pixel_color = self.ray_color(&r, world);
+                if self.samples_per_pixel == 1 {
+                    let pixel_center = self.pixel00_loc
+                        + self.pixel_delta_u * i as f64
+                        + self.pixel_delta_v * j as f64;
+                    let ray_direction = pixel_center - self.center;
+                    let r = Ray::new(self.center, ray_direction);
+                    let pixel_color = self.ray_color(&r, world);
 
-                write_color(pixel_color);
+                    write_color(pixel_color);
+                } else {
+                    let pixel_color = (0..self.samples_per_pixel)
+                        .map(|_| {
+                            let r = self.get_ray(i, j);
+                            self.ray_color(&r, world)
+                        })
+                        .sum::<Vec3>()
+                        / self.samples_per_pixel as f64;
+
+                    write_color(pixel_color);
+                }
             }
         }
         eprintln!();
@@ -80,4 +95,20 @@ impl Camera {
         let a = (r.direction().unit().y + 1.0) * 0.5;
         Vec3::new(1.0, 1.0, 1.0) * (1.0 - a) + Vec3::new(0.5, 0.7, 1.0) * a
     }
+
+    fn get_ray(&self, i: u32, j: u32) -> Ray {
+        let offset = sample_square();
+        let pixel_sample = self.pixel00_loc
+            + self.pixel_delta_u * (i as f64 + offset.x)
+            + self.pixel_delta_v * (j as f64 + offset.y);
+        Ray::new(self.center, pixel_sample - self.center)
+    }
+}
+
+fn sample_square() -> Vec3 {
+    Vec3::new(
+        rand::random::<f64>() - 0.5,
+        rand::random::<f64>() - 0.5,
+        0.0,
+    )
 }

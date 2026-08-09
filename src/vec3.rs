@@ -1,3 +1,4 @@
+use std::iter::Sum;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -102,5 +103,10 @@ impl MulAssign<f64> for Vec3 {
 impl DivAssign<f64> for Vec3 {
     fn div_assign(&mut self, b: f64) {
         *self = *self / b;
+    }
+}
+impl Sum for Vec3 {
+    fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
+        iter.fold(Vec3::zero(), |acc, x| acc + x)
     }
 }
