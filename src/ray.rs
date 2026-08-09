@@ -13,9 +13,6 @@ impl Ray {
             dir: direction,
         }
     }
-    pub fn zero() -> Self {
-        Self::new(Vec3::zero(), Vec3::zero())
-    }
 
     pub fn origin(&self) -> Vec3 {
         self.orig
