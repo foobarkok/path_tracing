@@ -95,7 +95,8 @@ impl Camera {
         }
 
         if let Some(rec) = world.hit(r, Interval::new(0.001, f64::INFINITY)) {
-            let dir = Vec3::random_on_hemisphere(rec.normal);
+            //let dir = Vec3::random_on_hemisphere(rec.normal);
+            let dir = Vec3::random_unit_vector() + rec.normal;
             return self.ray_color(&Ray::new(rec.p, dir), depth - 1, world) * 0.5;
         }
 
