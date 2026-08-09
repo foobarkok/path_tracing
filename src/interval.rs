@@ -21,4 +21,12 @@ impl Interval {
     pub fn surrounds(&self, x: f64) -> bool {
         self.lower < x && x < self.upper
     }
+    pub fn clamp(&self, x: f64) -> f64 {
+        if x < self.lower {
+            return self.lower;
+        } else if x > self.upper {
+            return self.upper;
+        }
+        x
+    }
 }
