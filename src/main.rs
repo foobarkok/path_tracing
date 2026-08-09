@@ -1,5 +1,3 @@
-use std::io::{self, Write};
-
 mod camera;
 mod color;
 mod hittable;
@@ -9,13 +7,8 @@ mod sphere;
 mod vec3;
 mod world;
 use camera::Camera;
-use color::write_color;
-use hittable::Hittable;
-use ray::Ray;
 use vec3::Vec3;
 use world::World;
-
-use crate::interval::Interval;
 
 fn main() {
     // World
