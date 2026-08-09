@@ -70,6 +70,11 @@ impl Vec3 {
             }
         }
     }
+    #[allow(dead_code)]
+    pub fn near_zero(&self) -> bool {
+        const S: f64 = 1e-8;
+        self.x.abs() < S && self.y.abs() < S && self.z.abs() < S
+    }
 }
 
 impl Neg for Vec3 {
