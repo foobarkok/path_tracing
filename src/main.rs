@@ -21,49 +21,64 @@ fn main() {
     // World
     let mut world = World::new();
 
-    let material_ground: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));
-    let material_center: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5)));
-    let material_left: Rc<dyn Material> = Rc::new(Dielectric::new(1.50));
-    let material_bubble: Rc<dyn Material> = Rc::new(Dielectric::new(1.0 / 1.50));
-    let material_right: Rc<dyn Material> = Rc::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 1.0));
+    // ground
+    world.add(Box::new(Sphere::new(
+        Vec3::new(0.0, -1000.0, 0.0),
+        1000.0,
+        Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+    )));
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_mat = rand::random::<f64>();
+            let center = Vec3::new(
+                a as f64 + 0.9 * rand::random::<f64>(),
+                0.2,
+                b as f64 + 0.9 * rand::random::<f64>(),
+            );
+            if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
+                let mat: Rc<dyn Material> = if choose_mat < 0.8 {
+                    let albedo = Vec3::random(0.0, 1.0) * Vec3::random(0.0, 1.0);
+                    Rc::new(Lambertian::new(albedo))
+                } else if choose_mat < 0.95 {
+                    let albedo = Vec3::random(0.5, 1.0);
+                    let fuzz = rand::random::<f64>();
+                    Rc::new(Metal::new(albedo, fuzz))
+                } else {
+                    Rc::new(Dielectric::new(1.5))
+                };
+                world.add(Box::new(Sphere::new(center, 0.2, mat)));
+            }
+        }
+    }
 
     world.add(Box::new(Sphere::new(
-        Vec3::new(0.0, -100.5, -1.0),
-        100.0,
-        Rc::clone(&material_ground),
+        Vec3::new(0.0, 1.0, 0.0),
+        1.0,
+        Rc::new(Dielectric::new(1.5)),
     )));
     world.add(Box::new(Sphere::new(
-        Vec3::new(0.0, 0.0, -1.2),
-        0.5,
-        Rc::clone(&material_center),
+        Vec3::new(-4.0, 1.0, 0.0),
+        1.0,
+        Rc::new(Lambertian::new(Vec3::new(0.4, 0.2, 0.1))),
     )));
     world.add(Box::new(Sphere::new(
-        Vec3::new(-1.0, 0.0, -1.0),
-        0.5,
-        Rc::clone(&material_left),
-    )));
-    world.add(Box::new(Sphere::new(
-        Vec3::new(-1.0, 0.0, -1.0),
-        0.4,
-        Rc::clone(&material_bubble),
-    )));
-    world.add(Box::new(Sphere::new(
-        Vec3::new(1.0, 0.0, -1.0),
-        0.5,
-        Rc::clone(&material_right),
+        Vec3::new(4.0, 1.0, 0.0),
+        1.0,
+        Rc::new(Metal::new(Vec3::new(0.7, 0.6, 0.5), 0.0)),
     )));
 
     let cam = Camera::new(
         16.0 / 9.0,
-        400,
+        1200,
         20.0,
-        Vec3::new(-2.0, 2.0, 1.0),
-        Vec3::new(0.0, 0.0, -1.0),
+        Vec3::new(13.0, 2.0, 3.0),
+        Vec3::zero(),
         Vec3::new(0.0, 1.0, 0.0),
+        0.6,
         10.0,
-        3.4,
     )
-    .set_samples_per_pixel(100)
+    .set_samples_per_pixel(500)
     .set_max_depth(50);
 
     cam.render(&world);
