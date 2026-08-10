@@ -12,7 +12,6 @@ pub struct Camera {
     max_depth: u32,
 
     defocus_angle: f64,
-    focus_dist: f64,
 
     center: Vec3,        // Camera center
     pixel00_loc: Vec3,   // Location of pixel 0, 0
@@ -71,7 +70,6 @@ impl Camera {
             samples_per_pixel: 100,
             max_depth: 50,
             defocus_angle,
-            focus_dist,
             center,
             pixel00_loc,
             pixel_delta_u,
