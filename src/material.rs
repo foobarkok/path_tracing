@@ -70,10 +70,18 @@ impl Material for Dielectric {
         } else {
             self.refraction_index
         };
-        let reflacted = r_in.direction().unit().reflect_snell(rec.normal, ri);
+        let unit_dir = r_in.direction().unit();
+        let cos_theta = -unit_dir.dot(rec.normal);
+        let cos_theta = if cos_theta < 1.0 { cos_theta } else { 1.0 };
+        let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
+        let direction = if ri * sin_theta > 1.0 {
+            unit_dir.reflect(rec.normal)
+        } else {
+            unit_dir.refract(rec.normal, ri)
+        };
         Some(Scattered {
             attenuation: Vec3::new(1.0, 1.0, 1.0),
-            scattered_ray: Ray::new(rec.p, reflacted),
+            scattered_ray: Ray::new(rec.p, direction),
         })
     }
 }

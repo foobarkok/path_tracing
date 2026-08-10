@@ -80,7 +80,7 @@ impl Vec3 {
         *self - n * (2.0 * self.dot(n))
     }
     #[allow(dead_code)]
-    pub fn reflect_snell(&self, n: Vec3, etai_over_etat: f64) -> Self {
+    pub fn refract(&self, n: Vec3, etai_over_etat: f64) -> Self {
         let cos_theta = -self.dot(n);
         let cos_theta = if cos_theta < 1.0 { cos_theta } else { 1.0 };
         let r_out_perp = (*self + n * cos_theta) * etai_over_etat;
