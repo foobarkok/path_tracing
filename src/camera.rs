@@ -1,5 +1,8 @@
 use crate::{color::write_color, hittable::Hittable, interval::Interval, ray::Ray, vec3::Vec3};
-use std::io::{self, Write};
+use std::{
+    f64,
+    io::{self, Write},
+};
 
 pub struct Camera {
     image_width: u32,
@@ -15,13 +18,18 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new_from_width_and_ratio(image_width: u32, aspect_ratio: f64) -> Self {
+    pub fn new_from_width_and_ratio_and_vfov(
+        image_width: u32,
+        aspect_ratio: f64,
+        vfov: f64,
+    ) -> Self {
         let image_height: u32 = (image_width as f64 / aspect_ratio) as u32;
         let image_height: u32 = if image_height < 1 { 1 } else { image_height };
 
         // Viewport
         let focal_length: f64 = 1.0;
-        let viewport_height: f64 = 2.0;
+        let viewport_height: f64 =
+            2.0 * focal_length * ((vfov * (f64::consts::PI / 180.0)) / 2.0).tan();
         let viewport_width: f64 = viewport_height * (image_width as f64 / image_height as f64);
         let center = Vec3::zero();
 

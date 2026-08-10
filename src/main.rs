@@ -53,7 +53,7 @@ fn main() {
         Rc::clone(&material_right),
     )));
 
-    let cam = Camera::new_from_width_and_ratio(400, 16.0 / 9.0)
+    let cam = Camera::new_from_width_and_ratio_and_vfov(400, 16.0 / 9.0, 90.0)
         .set_samples_per_pixel(100)
         .set_max_depth(50);
 
