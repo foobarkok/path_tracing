@@ -3,16 +3,16 @@ use crate::interval::Interval;
 use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub struct Sphere {
     center: Vec3,
     radius: f64,
-    mat: Rc<dyn Material>,
+    mat: Arc<dyn Material>,
 }
 
 impl Sphere {
-    pub const fn new(center: Vec3, radius: f64, mat: Rc<dyn Material>) -> Self {
+    pub const fn new(center: Vec3, radius: f64, mat: Arc<dyn Material>) -> Self {
         Self {
             center,
             radius,
@@ -48,7 +48,7 @@ impl Hittable for Sphere {
             t,
             r,
             outward_normal,
-            Rc::clone(&self.mat),
+            Arc::clone(&self.mat),
         ))
     }
 }

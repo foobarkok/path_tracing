@@ -1,4 +1,5 @@
 use crate::{color::write_color, hittable::Hittable, interval::Interval, ray::Ray, vec3::Vec3};
+use rayon::prelude::*;
 use std::{
     f64,
     io::{self, Write},
@@ -101,27 +102,29 @@ impl Camera {
         for j in 0..image_height {
             eprint!("\r\x1B[2KScanlines remaining:{}", image_height - j);
             io::stderr().flush().unwrap();
-            for i in 0..image_width {
-                if self.samples_per_pixel == 1 {
-                    let pixel_center = self.pixel00_loc
-                        + self.pixel_delta_u * i as f64
-                        + self.pixel_delta_v * j as f64;
-                    let ray_direction = pixel_center - self.center;
-                    let r = Ray::new(self.center, ray_direction);
-                    let pixel_color = self.ray_color(&r, self.max_depth, world);
-
-                    write_color(pixel_color);
-                } else {
-                    let pixel_color = (0..self.samples_per_pixel)
-                        .map(|_| {
-                            let r = self.get_ray(i, j);
-                            self.ray_color(&r, self.max_depth, world)
-                        })
-                        .sum::<Vec3>()
-                        / self.samples_per_pixel as f64;
-
-                    write_color(pixel_color);
-                }
+            let pixel_colors: Vec<_> = (0..image_width)
+                .into_par_iter()
+                .map(|i| {
+                    if self.samples_per_pixel == 1 {
+                        let pixel_center = self.pixel00_loc
+                            + self.pixel_delta_u * i as f64
+                            + self.pixel_delta_v * j as f64;
+                        let ray_direction = pixel_center - self.center;
+                        let r = Ray::new(self.center, ray_direction);
+                        self.ray_color(&r, self.max_depth, world)
+                    } else {
+                        (0..self.samples_per_pixel)
+                            .map(|_| {
+                                let r = self.get_ray(i, j);
+                                self.ray_color(&r, self.max_depth, world)
+                            })
+                            .sum::<Vec3>()
+                            / self.samples_per_pixel as f64
+                    }
+                })
+                .collect();
+            for pixel_color in pixel_colors {
+                write_color(pixel_color);
             }
         }
         eprintln!();

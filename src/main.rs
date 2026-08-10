@@ -8,7 +8,7 @@ mod sphere;
 mod vec3;
 mod world;
 use camera::Camera;
-use std::rc::Rc;
+use std::sync::Arc;
 use vec3::Vec3;
 use world::World;
 
@@ -25,7 +25,7 @@ fn main() {
     world.add(Box::new(Sphere::new(
         Vec3::new(0.0, -1000.0, 0.0),
         1000.0,
-        Rc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
+        Arc::new(Lambertian::new(Vec3::new(0.5, 0.5, 0.5))),
     )));
 
     for a in -11..11 {
@@ -37,15 +37,15 @@ fn main() {
                 b as f64 + 0.9 * fastrand::f64(),
             );
             if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
-                let mat: Rc<dyn Material> = if choose_mat < 0.8 {
+                let mat: Arc<dyn Material> = if choose_mat < 0.8 {
                     let albedo = Vec3::random(0.0, 1.0) * Vec3::random(0.0, 1.0);
-                    Rc::new(Lambertian::new(albedo))
+                    Arc::new(Lambertian::new(albedo))
                 } else if choose_mat < 0.95 {
                     let albedo = Vec3::random(0.5, 1.0);
                     let fuzz = fastrand::f64();
-                    Rc::new(Metal::new(albedo, fuzz))
+                    Arc::new(Metal::new(albedo, fuzz))
                 } else {
-                    Rc::new(Dielectric::new(1.5))
+                    Arc::new(Dielectric::new(1.5))
                 };
                 world.add(Box::new(Sphere::new(center, 0.2, mat)));
             }
@@ -55,17 +55,17 @@ fn main() {
     world.add(Box::new(Sphere::new(
         Vec3::new(0.0, 1.0, 0.0),
         1.0,
-        Rc::new(Dielectric::new(1.5)),
+        Arc::new(Dielectric::new(1.5)),
     )));
     world.add(Box::new(Sphere::new(
         Vec3::new(-4.0, 1.0, 0.0),
         1.0,
-        Rc::new(Lambertian::new(Vec3::new(0.4, 0.2, 0.1))),
+        Arc::new(Lambertian::new(Vec3::new(0.4, 0.2, 0.1))),
     )));
     world.add(Box::new(Sphere::new(
         Vec3::new(4.0, 1.0, 0.0),
         1.0,
-        Rc::new(Metal::new(Vec3::new(0.7, 0.6, 0.5), 0.0)),
+        Arc::new(Metal::new(Vec3::new(0.7, 0.6, 0.5), 0.0)),
     )));
 
     let cam = Camera::new(
