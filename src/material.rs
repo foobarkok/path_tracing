@@ -74,14 +74,23 @@ impl Material for Dielectric {
         let cos_theta = -unit_dir.dot(rec.normal);
         let cos_theta = if cos_theta < 1.0 { cos_theta } else { 1.0 };
         let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
-        let direction = if ri * sin_theta > 1.0 {
-            unit_dir.reflect(rec.normal)
-        } else {
-            unit_dir.refract(rec.normal, ri)
-        };
+        let direction =
+            if ri * sin_theta > 1.0 || reflectance(cos_theta, ri) > rand::random::<f64>() {
+                unit_dir.reflect(rec.normal)
+            } else {
+                unit_dir.refract(rec.normal, ri)
+            };
         Some(Scattered {
             attenuation: Vec3::new(1.0, 1.0, 1.0),
             scattered_ray: Ray::new(rec.p, direction),
         })
     }
+}
+fn reflectance(cosine: f64, refraction_index: f64) -> f64 {
+    let r0 = (1.0 - refraction_index) / (1.0 + refraction_index);
+    let r0 = r0 * r0;
+    let x = 1.0 - cosine;
+    let x2 = x * x;
+    let x5 = x2 * x2 * x;
+    r0 + (1.0 - r0) * x5
 }
