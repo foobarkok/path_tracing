@@ -79,6 +79,14 @@ impl Vec3 {
     pub fn reflect(&self, n: Vec3) -> Self {
         *self - n * (2.0 * self.dot(n))
     }
+    #[allow(dead_code)]
+    pub fn reflect_snell(&self, n: Vec3, etai_over_etat: f64) -> Self {
+        let cos_theta = -self.dot(n);
+        let cos_theta = if cos_theta < 1.0 { cos_theta } else { 1.0 };
+        let r_out_perp = (*self + n * cos_theta) * etai_over_etat;
+        let r_out_parallel = -n * (1.0 - r_out_perp.length_squared()).sqrt();
+        r_out_perp + r_out_parallel
+    }
 }
 
 impl Neg for Vec3 {

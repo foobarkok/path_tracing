@@ -13,7 +13,7 @@ use vec3::Vec3;
 use world::World;
 
 use crate::{
-    material::{Lambertian, Material, Metal},
+    material::{Dielectric, Lambertian, Material, Metal},
     sphere::Sphere,
 };
 
@@ -23,7 +23,7 @@ fn main() {
 
     let material_ground: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));
     let material_center: Rc<dyn Material> = Rc::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5)));
-    let material_left: Rc<dyn Material> = Rc::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.3));
+    let material_left: Rc<dyn Material> = Rc::new(Dielectric::new(1.50));
     let material_right: Rc<dyn Material> = Rc::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 1.0));
 
     world.add(Box::new(Sphere::new(
