@@ -1,7 +1,4 @@
-use crate::{
-    color::write_color, hittable::Hittable, interval::Interval, material::Scattered, ray::Ray,
-    vec3::Vec3,
-};
+use crate::{color::write_color, hittable::Hittable, interval::Interval, ray::Ray, vec3::Vec3};
 use std::io::{self, Write};
 
 pub struct Camera {
@@ -51,6 +48,16 @@ impl Camera {
             pixel_delta_u,
             pixel_delta_v,
         }
+    }
+    #[allow(dead_code)]
+    pub fn set_samples_per_pixel(mut self, samples_per_pixel: u32) -> Self {
+        self.samples_per_pixel = samples_per_pixel;
+        self
+    }
+    #[allow(dead_code)]
+    pub fn set_max_depth(mut self, max_depth: u32) -> Self {
+        self.max_depth = max_depth;
+        self
     }
 
     pub fn render<T: Hittable>(&self, world: &T) {
