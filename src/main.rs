@@ -53,9 +53,16 @@ fn main() {
         Rc::clone(&material_right),
     )));
 
-    let cam = Camera::new_from_width_and_ratio_and_vfov(400, 16.0 / 9.0, 90.0)
-        .set_samples_per_pixel(100)
-        .set_max_depth(50);
+    let cam = Camera::new(
+        16.0 / 9.0,
+        400,
+        20.0,
+        Vec3::new(-2.0, 2.0, 1.0),
+        Vec3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+    )
+    .set_samples_per_pixel(100)
+    .set_max_depth(50);
 
     cam.render(&world);
 }

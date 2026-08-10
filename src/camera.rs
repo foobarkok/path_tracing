@@ -18,32 +18,40 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new_from_width_and_ratio_and_vfov(
-        image_width: u32,
+    pub fn new(
         aspect_ratio: f64,
+        image_width: u32,
         vfov: f64,
+        lookform: Vec3,
+        lookat: Vec3,
+        vup: Vec3,
     ) -> Self {
         let image_height: u32 = (image_width as f64 / aspect_ratio) as u32;
         let image_height: u32 = if image_height < 1 { 1 } else { image_height };
 
+        let center = lookform;
+
         // Viewport
-        let focal_length: f64 = 1.0;
+        let focal_length: f64 = (lookform - lookat).length();
         let viewport_height: f64 =
             2.0 * focal_length * ((vfov * (f64::consts::PI / 180.0)) / 2.0).tan();
         let viewport_width: f64 = viewport_height * (image_width as f64 / image_height as f64);
-        let center = Vec3::zero();
+
+        // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+        let w = (lookform - lookat).unit();
+        let u = vup.cross(w).unit();
+        let v = w.cross(u);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
-        let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
+        let viewport_u = u * viewport_width;
+        let viewport_v = -v * viewport_height;
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
         let pixel_delta_u = viewport_u / image_width as f64;
         let pixel_delta_v = viewport_v / image_height as f64;
 
         // Calculate the location of the upper left pixel.
-        let viewport_upper_left =
-            center - Vec3::new(0.0, 0.0, focal_length) - viewport_u * 0.5 - viewport_v * 0.5;
+        let viewport_upper_left = center - w * focal_length - viewport_u * 0.5 - viewport_v * 0.5;
         let pixel00_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5;
 
         Self {
