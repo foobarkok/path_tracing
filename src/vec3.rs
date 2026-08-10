@@ -44,9 +44,9 @@ impl Vec3 {
     #[allow(dead_code)]
     pub fn random(min: f64, max: f64) -> Self {
         Self::new(
-            min + (max - min) * rand::random::<f64>(),
-            min + (max - min) * rand::random::<f64>(),
-            min + (max - min) * rand::random::<f64>(),
+            min + (max - min) * fastrand::f64(),
+            min + (max - min) * fastrand::f64(),
+            min + (max - min) * fastrand::f64(),
         )
     }
     #[allow(dead_code)]
@@ -91,8 +91,8 @@ impl Vec3 {
     pub fn random_in_unit_disk() -> Self {
         loop {
             let p = Vec3::new(
-                rand::random::<f64>() * 2.0 - 1.0,
-                rand::random::<f64>() * 2.0 - 1.0,
+                fastrand::f64() * 2.0 - 1.0,
+                fastrand::f64() * 2.0 - 1.0,
                 0.0,
             );
             if p.length_squared() < 1.0 {

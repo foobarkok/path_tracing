@@ -30,11 +30,11 @@ fn main() {
 
     for a in -11..11 {
         for b in -11..11 {
-            let choose_mat = rand::random::<f64>();
+            let choose_mat = fastrand::f64();
             let center = Vec3::new(
-                a as f64 + 0.9 * rand::random::<f64>(),
+                a as f64 + 0.9 * fastrand::f64(),
                 0.2,
-                b as f64 + 0.9 * rand::random::<f64>(),
+                b as f64 + 0.9 * fastrand::f64(),
             );
             if (center - Vec3::new(4.0, 0.2, 0.0)).length() > 0.9 {
                 let mat: Rc<dyn Material> = if choose_mat < 0.8 {
@@ -42,7 +42,7 @@ fn main() {
                     Rc::new(Lambertian::new(albedo))
                 } else if choose_mat < 0.95 {
                     let albedo = Vec3::random(0.5, 1.0);
-                    let fuzz = rand::random::<f64>();
+                    let fuzz = fastrand::f64();
                     Rc::new(Metal::new(albedo, fuzz))
                 } else {
                     Rc::new(Dielectric::new(1.5))
