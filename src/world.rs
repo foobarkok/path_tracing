@@ -7,11 +7,13 @@ pub struct World {
 }
 
 impl World {
+    #[allow(dead_code)]
     pub fn new() -> Self {
         Self {
             objects: Vec::new(),
         }
     }
+    #[allow(dead_code)]
     pub fn new_from_vec(objects: Vec<Box<dyn Hittable>>) -> Self {
         Self { objects }
     }
