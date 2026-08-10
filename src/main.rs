@@ -60,6 +60,8 @@ fn main() {
         Vec3::new(-2.0, 2.0, 1.0),
         Vec3::new(0.0, 0.0, -1.0),
         Vec3::new(0.0, 1.0, 0.0),
+        10.0,
+        3.4,
     )
     .set_samples_per_pixel(100)
     .set_max_depth(50);

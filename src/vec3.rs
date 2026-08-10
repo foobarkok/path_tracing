@@ -87,6 +87,19 @@ impl Vec3 {
         let r_out_parallel = -n * (1.0 - r_out_perp.length_squared()).sqrt();
         r_out_perp + r_out_parallel
     }
+    #[allow(dead_code)]
+    pub fn random_in_unit_disk() -> Self {
+        loop {
+            let p = Vec3::new(
+                rand::random::<f64>() * 2.0 - 1.0,
+                rand::random::<f64>() * 2.0 - 1.0,
+                0.0,
+            );
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
 }
 
 impl Neg for Vec3 {
