@@ -13,7 +13,7 @@ pub struct Lambertian {
     albedo: Vec3,
 }
 impl Lambertian {
-    fn new(albedo: Vec3) -> Self {
+    pub fn new(albedo: Vec3) -> Self {
         Self { albedo }
     }
 }
@@ -34,7 +34,7 @@ pub struct Metal {
     albedo: Vec3,
 }
 impl Metal {
-    fn new(albedo: Vec3) -> Self {
+    pub fn new(albedo: Vec3) -> Self {
         Self { albedo }
     }
 }

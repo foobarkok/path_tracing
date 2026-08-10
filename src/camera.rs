@@ -1,4 +1,7 @@
-use crate::{color::write_color, hittable::Hittable, interval::Interval, ray::Ray, vec3::Vec3};
+use crate::{
+    color::write_color, hittable::Hittable, interval::Interval, material::Scattered, ray::Ray,
+    vec3::Vec3,
+};
 use std::io::{self, Write};
 
 pub struct Camera {
@@ -95,9 +98,11 @@ impl Camera {
         }
 
         if let Some(rec) = world.hit(r, Interval::new(0.001, f64::INFINITY)) {
-            //let dir = Vec3::random_on_hemisphere(rec.normal);
-            let dir = Vec3::random_unit_vector() + rec.normal;
-            return self.ray_color(&Ray::new(rec.p, dir), depth - 1, world) * 0.5;
+            if let Some(scattered) = rec.mat.scatter(r, &rec) {
+                return self.ray_color(&scattered.scattered_ray, depth - 1, world)
+                    * scattered.attenuation;
+            }
+            return Vec3::zero();
         }
 
         let a = (r.direction().unit().y + 1.0) * 0.5;
