@@ -1,13 +1,13 @@
-use crate::vec3::Vec3;
+use glam::Vec3A;
 
-fn liner2gamma(liner: f64) -> f64 {
+fn liner2gamma(liner: f32) -> f32 {
     if liner > 0.0 {
         return liner.sqrt();
     }
     0.0
 }
 
-pub fn write_color(color: Vec3) {
+pub fn write_color(color: Vec3A) {
     let r = liner2gamma(color.x);
     let g = liner2gamma(color.y);
     let b = liner2gamma(color.z);
